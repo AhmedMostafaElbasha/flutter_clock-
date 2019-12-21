@@ -23,3 +23,22 @@ flutter:
     - family: PressStart2P
       fonts:
         - asset: third_party/PressStart2P-Regular.ttf
+    - family: ConcertOne
+      fonts:
+        - asset: assets/fonts/Concert_One/ConcertOne-Regular.ttf
+          weight: 400
+    - family: Lora
+      fonts:
+        - asset: assets/fonts/Lora/Lora-Regular.ttf 
+          weight: 400
+        - asset: assets/fonts/Lora/Lora-Bold.ttf
+          weight: 700
+    - family: Raleway
+      fonts:
+        - asset: assets/fonts/Raleway/Raleway-Regular.ttf 
+          weight: 400
+        - asset: assets/fonts/Raleway/Raleway-Bold.ttf
+          weight: 700
+        - asset: assets/fonts/Raleway/Raleway-SemiBold.ttf
+          weight: 600
+                     
