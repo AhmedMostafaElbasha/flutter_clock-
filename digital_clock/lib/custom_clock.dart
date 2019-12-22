@@ -111,6 +111,34 @@ class _CustomClockState extends State<CustomClock> {
     }
   }
 
+  String displayTimePeriod(String hour, IconData weatherConditionIcon) {
+    final morningWeatherIcons = (weatherConditionIcon == FontAwesomeIcons.sun ||
+        weatherConditionIcon == FontAwesomeIcons.cloudSun ||
+        weatherConditionIcon == FontAwesomeIcons.cloudSunRain);
+
+    final nightWeatherIcons = (weatherConditionIcon == FontAwesomeIcons.moon ||
+        weatherConditionIcon == FontAwesomeIcons.cloudMoon ||
+        weatherConditionIcon == FontAwesomeIcons.cloudMoonRain);
+
+    switch (widget.model.is24HourFormat) {
+      case true:
+        if (int.parse(hour) >= 12) {
+          return 'PM';
+        } else if (int.parse(hour) <= 12) {
+          return 'AM';
+        }
+        break;
+      case false:
+        if ((int.parse(hour) < 12 || int.parse(hour) == 12) &&
+            morningWeatherIcons) {
+          return 'PM';
+        } else if ((int.parse(hour) < 12 || int.parse(hour) == 12) &&
+            nightWeatherIcons) {
+          return 'AM';
+        }
+    }
+  }
+
   @override
   Widget build(BuildContext context) {
     final colors = Theme.of(context).brightness == Brightness.light
@@ -126,9 +154,10 @@ class _CustomClockState extends State<CustomClock> {
     final location = widget.model.location;
     final second = DateFormat('ss').format(_dateTime);
     final offset = -fontSize / 7;
+    final timerPeriod = displayTimePeriod(hour, weatherConditionIcon);
     final defaultStyle = TextStyle(
       color: colors[_Element.text],
-      fontFamily: 'PressStart2P',
+      fontFamily: 'ConcertOne',
       fontSize: fontSize,
       shadows: [
         Shadow(
@@ -156,6 +185,7 @@ class _CustomClockState extends State<CustomClock> {
               hour,
               minute,
               second,
+              timerPeriod,
             )
           ],
         ),
@@ -163,8 +193,8 @@ class _CustomClockState extends State<CustomClock> {
     );
   }
 
-  Widget displayDate(
-      TextStyle textStyle, String hour, String minute, String second) {
+  Widget displayDate(TextStyle textStyle, String hour, String minute,
+      String second, String timePeriod) {
     return Center(
       child: DefaultTextStyle(
         style: textStyle,
@@ -197,9 +227,12 @@ class _CustomClockState extends State<CustomClock> {
               child: Text(
                 second,
                 style: TextStyle(
-                  fontSize: MediaQuery.of(context).size.width / 23.5,
+                  fontSize: MediaQuery.of(context).size.width / 19.0,
                 ),
               ),
+            ),
+            SizedBox(
+              height: 20,
             ),
             SizedBox(
               width: 20,
@@ -207,10 +240,9 @@ class _CustomClockState extends State<CustomClock> {
             Flexible(
               child: Column(
                 mainAxisSize: MainAxisSize.min,
-                mainAxisAlignment: MainAxisAlignment.center,
                 children: <Widget>[
                   Text(
-                    'AM',
+                    timePeriod,
                     style: TextStyle(
                       fontSize: MediaQuery.of(context).size.width / 14.5,
                     ),
@@ -244,6 +276,7 @@ class _CustomClockState extends State<CustomClock> {
                 '$temprature $location',
                 style: TextStyle(
                   color: textColor,
+                  fontFamily: 'ConcertOne',
                   fontWeight: FontWeight.bold,
                 ),
               ),
@@ -251,6 +284,7 @@ class _CustomClockState extends State<CustomClock> {
                 weather,
                 style: TextStyle(
                   color: textColor,
+                  fontFamily: 'ConcertOne',
                   fontWeight: FontWeight.bold,
                 ),
               ),
@@ -258,6 +292,7 @@ class _CustomClockState extends State<CustomClock> {
                 DateFormat.yMMMd().format(_dateTime),
                 style: TextStyle(
                   color: textColor,
+                  fontFamily: 'ConcertOne',
                   fontWeight: FontWeight.bold,
                 ),
               ),
