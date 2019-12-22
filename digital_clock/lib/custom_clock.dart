@@ -232,9 +232,6 @@ class _CustomClockState extends State<CustomClock> {
               ),
             ),
             SizedBox(
-              height: 20,
-            ),
-            SizedBox(
               width: 20,
             ),
             Flexible(
