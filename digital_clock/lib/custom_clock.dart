@@ -4,7 +4,6 @@ import 'dart:async';
 import 'package:flutter_clock_helper/model.dart';
 import 'package:flutter/material.dart';
 import 'package:intl/intl.dart';
-import 'package:font_awesome_flutter/font_awesome_flutter.dart';
 
 enum _Element {
   background,
@@ -26,8 +25,9 @@ final _darkTheme = {
 
 class CustomClock extends StatefulWidget {
   final ClockModel model;
+  String currentTimePeriod;
 
-  const CustomClock(this.model);
+  CustomClock(this.model);
 
   @override
   _CustomClockState createState() => _CustomClockState();
@@ -78,64 +78,11 @@ class _CustomClockState extends State<CustomClock> {
     });
   }
 
-  IconData get weatherConditionIcon {
-    switch (widget.model.weatherCondition) {
-      case WeatherCondition.cloudy:
-        return Theme.of(context).brightness == Brightness.light
-            ? FontAwesomeIcons.cloudSun
-            : FontAwesomeIcons.cloudMoon;
-        break;
-      case WeatherCondition.foggy:
-        return FontAwesomeIcons.smog;
-        break;
-      case WeatherCondition.rainy:
-        return Theme.of(context).brightness == Brightness.light
-            ? FontAwesomeIcons.cloudSunRain
-            : FontAwesomeIcons.cloudMoonRain;
-        break;
-      case WeatherCondition.snowy:
-        return FontAwesomeIcons.snowflake;
-        break;
-      case WeatherCondition.sunny:
-        return FontAwesomeIcons.sun;
-        break;
-      case WeatherCondition.thunderstorm:
-        return FontAwesomeIcons.bolt;
-        break;
-      case WeatherCondition.windy:
-        return FontAwesomeIcons.wind;
-        break;
-      default:
-        return FontAwesomeIcons.cloudSun;
-        break;
-    }
-  }
-
-  String displayTimePeriod(String hour, IconData weatherConditionIcon) {
-    final morningWeatherIcons = (weatherConditionIcon == FontAwesomeIcons.sun ||
-        weatherConditionIcon == FontAwesomeIcons.cloudSun ||
-        weatherConditionIcon == FontAwesomeIcons.cloudSunRain);
-
-    final nightWeatherIcons = (weatherConditionIcon == FontAwesomeIcons.moon ||
-        weatherConditionIcon == FontAwesomeIcons.cloudMoon ||
-        weatherConditionIcon == FontAwesomeIcons.cloudMoonRain);
-
-    switch (widget.model.is24HourFormat) {
-      case true:
-        if (int.parse(hour) >= 12) {
-          return 'PM';
-        } else if (int.parse(hour) <= 12) {
-          return 'AM';
-        }
-        break;
-      case false:
-        if ((int.parse(hour) < 12 || int.parse(hour) == 12) &&
-            morningWeatherIcons) {
-          return 'PM';
-        } else if ((int.parse(hour) < 12 || int.parse(hour) == 12) &&
-            nightWeatherIcons) {
-          return 'AM';
-        }
+  String displayTimePeriod(String hour) {
+    if (int.parse(hour) >= 12) {
+      return 'PM';
+    } else if (int.parse(hour) <= 12) {
+      return 'AM';
     }
   }
 
@@ -146,7 +93,6 @@ class _CustomClockState extends State<CustomClock> {
         : _darkTheme;
     final hour =
         DateFormat(widget.model.is24HourFormat ? 'HH' : 'hh').format(_dateTime);
-    final weatherIcon = weatherConditionIcon;
     final minute = DateFormat('mm').format(_dateTime);
     final fontSize = MediaQuery.of(context).size.width / 14.5;
     final temprature = widget.model.temperatureString;
@@ -154,7 +100,10 @@ class _CustomClockState extends State<CustomClock> {
     final location = widget.model.location;
     final second = DateFormat('ss').format(_dateTime);
     final offset = -fontSize / 7;
-    final timerPeriod = displayTimePeriod(hour, weatherConditionIcon);
+    final timerPeriod = displayTimePeriod(hour) == null
+        ? widget.currentTimePeriod
+        : displayTimePeriod(hour);
+    widget.currentTimePeriod = timerPeriod;
     final defaultStyle = TextStyle(
       color: colors[_Element.text],
       fontFamily: 'ConcertOne',
@@ -174,7 +123,6 @@ class _CustomClockState extends State<CustomClock> {
         child: Stack(
           children: <Widget>[
             weatherAndDateInfo(
-              weatherIcon,
               colors[_Element.text],
               temprature,
               location,
@@ -253,19 +201,12 @@ class _CustomClockState extends State<CustomClock> {
     );
   }
 
-  Widget weatherAndDateInfo(IconData weatherIcon, Color textColor,
-      String temprature, String location, String weather) {
+  Widget weatherAndDateInfo(
+      Color textColor, String temprature, String location, String weather) {
     return Positioned(
       child: Row(
         crossAxisAlignment: CrossAxisAlignment.start,
         children: <Widget>[
-          Icon(
-            weatherIcon,
-            color: textColor,
-          ),
-          SizedBox(
-            width: 5,
-          ),
           Column(
             crossAxisAlignment: CrossAxisAlignment.start,
             children: <Widget>[

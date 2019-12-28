@@ -9,8 +9,7 @@ dependencies:
   flutter:
     sdk: flutter
   flutter_clock_helper:
-    path: ../flutter_clock_helper
-  font_awesome_flutter: ^8.5.0  
+    path: ../flutter_clock_helper  
   cupertino_icons: ^0.1.2
 
 dev_dependencies:
@@ -27,18 +26,4 @@ flutter:
       fonts:
         - asset: assets/fonts/Concert_One/ConcertOne-Regular.ttf
           weight: 400
-    - family: Lora
-      fonts:
-        - asset: assets/fonts/Lora/Lora-Regular.ttf 
-          weight: 400
-        - asset: assets/fonts/Lora/Lora-Bold.ttf
-          weight: 700
-    - family: Raleway
-      fonts:
-        - asset: assets/fonts/Raleway/Raleway-Regular.ttf 
-          weight: 400
-        - asset: assets/fonts/Raleway/Raleway-Bold.ttf
-          weight: 700
-        - asset: assets/fonts/Raleway/Raleway-SemiBold.ttf
-          weight: 600
                      
