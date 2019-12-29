@@ -1,6 +1,7 @@
 import 'dart:async';
 //import 'dart:html';
 
+import 'package:flutter/services.dart';
 import 'package:flutter_clock_helper/model.dart';
 import 'package:flutter/material.dart';
 import 'package:intl/intl.dart';
@@ -40,6 +41,10 @@ class _CustomClockState extends State<CustomClock> {
   @override
   void initState() {
     super.initState();
+    SystemChrome.setPreferredOrientations([
+      DeviceOrientation.landscapeLeft,
+      DeviceOrientation.landscapeRight,
+    ]);
     widget.model.addListener(_updateModel);
     _updateTime();
     _updateModel();
@@ -51,11 +56,18 @@ class _CustomClockState extends State<CustomClock> {
     if (widget.model != oldWidget.model) {
       oldWidget.model.removeListener(_updateModel);
       widget.model.addListener(_updateModel);
+      widget.currentTimePeriod = oldWidget.currentTimePeriod;
     }
   }
 
   @override
   void dispose() {
+    SystemChrome.setPreferredOrientations([
+      DeviceOrientation.portraitUp,
+      DeviceOrientation.portraitDown,
+      DeviceOrientation.landscapeLeft,
+      DeviceOrientation.landscapeRight,
+    ]);
     _timer?.cancel();
     widget.model.removeListener(_updateModel);
     widget.model.dispose();
